@@ -1,0 +1,38 @@
+service:
+  name: image-uploader
+
+plugins:
+  - serverless-plugin-typescript # tsc and copy node_modules(--production) to .build
+  - serverless-offline # for test
+  - serverless-deployment-bucket # for creating new bucket
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-northeast-2
+  stage: ${opt:stage, 'dev'}
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    PROD_MODE: ${self:provider.stage}
+    BUCKET: ${self:service}-bucket-${self:provider.stage}
+
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Resource: 'arn:aws:s3:::${self:service}-bucket-${self:provider.stage}/*'
+      Action:
+        - s3:PutObject
+        - s3:PutObjectAcl
+
+  deploymentBucket:
+    name: ${self:service}-bucket-${self:provider.stage}
+
+functions:
+  Image:
+    handler: src/handlers/image_handler.imageHandler
+    memorySize: 128
+    timeout: 6
+    events:
+      - http:
+          method: post
+          path: /images
+          cors: true

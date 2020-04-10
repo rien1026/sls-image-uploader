@@ -1,0 +1,30 @@
+{
+	"name": "image-uploader",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/aws-sdk": "^2.7.0",
+		"@types/koa": "^2.11.2",
+		"@types/koa-router": "^7.4.0",
+		"@types/koa__cors": "^3.0.1",
+		"serverless-deployment-bucket": "^1.1.1",
+		"serverless-offline": "^6.0.0",
+		"serverless-plugin-typescript": "^1.1.9",
+		"typescript": "^3.8.3"
+	},
+	"dependencies": {
+		"@koa/cors": "^3.0.0",
+		"aws-sdk": "^2.643.0",
+		"koa": "^2.11.0",
+		"koa-body": "^4.1.1",
+		"koa-router": "^8.0.8",
+		"serverless-http": "^2.3.2"
+	}
+}
