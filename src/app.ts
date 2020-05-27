@@ -17,8 +17,8 @@ app.use(async (ctx: Koa.Context, next: Koa.Next) => {
 
 		// need to explicitly set 404 here
 		if (!ctx.status) {
-			ctx.status = 404;
-			ctx.body = { msg: 'Not Found.' };
+			ctx.status = 400;
+			ctx.body = { msg: 'Bad Request.' };
 		}
 	} catch (err) {
 		ctx.status = err.errCode || 500;

@@ -2,26 +2,29 @@ import * as Koa from 'koa';
 import * as AWS from 'aws-sdk';
 import { Constants } from '../../utils/constants';
 import { AppError } from '../../common';
+import Joi from '@hapi/joi';
 
 const s3 = new AWS.S3();
 
-const postImage = async (ctx: Koa.Context) => {
-	let imageData = ctx.request.body.imageData;
-	let imageName = ctx.request.body.imageName;
+const PostImageParams = Joi.object({
+	imageData: Joi.string().required(),
+	imageName: Joi.string().required(),
+});
 
+const postImage = async (ctx: Koa.Context) => {
 	try {
-		let buffer = Buffer.from(imageData, 'base64');
-		let result = await s3
+		let params = await PostImageParams.validateAsync(ctx.request.body);
+		console.log(params.name + ':' + params.imageData.length);
+		let buffer = Buffer.from(params.imageData, 'base64');
+		await s3
 			.putObject({
 				Bucket: Constants.BUCKET,
 				Body: buffer,
-				Key: imageName,
-				ContentType: 'image/png',
+				Key: params.imageName,
+				ContentType: 'image',
 				ACL: 'public-read',
 			})
 			.promise();
-
-		console.log('result', result);
 	} catch (err) {
 		throw new AppError('postImage', err.message, err.stack);
 	}
