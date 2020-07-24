@@ -4,18 +4,21 @@ import { Constants } from '../../utils/constants';
 import { AppError } from '../../common';
 import Joi from '@hapi/joi';
 
-const s3 = new AWS.S3();
-
-const PostImageParams = Joi.object({
-	imageData: Joi.string().required(),
-	imageName: Joi.string().required(),
-});
-
 const postImage = async (ctx: Koa.Context) => {
 	try {
+		let s3 = new AWS.S3();
+
+		let PostImageParams = Joi.object({
+			imageData: Joi.string().required(),
+			imageName: Joi.string().required(),
+		});
+
 		let params = await PostImageParams.validateAsync(ctx.request.body);
-		console.log(params.name + ':' + params.imageData.length);
+
 		let buffer = Buffer.from(params.imageData, 'base64');
+		let fileSize = buffer.byteLength;
+		console.log('[image!!] = ' + params.imageName + ':' + fileSize + '=== file buffer size');
+
 		await s3
 			.putObject({
 				Bucket: Constants.BUCKET,
