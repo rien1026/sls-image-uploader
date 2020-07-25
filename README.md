@@ -1,5 +1,6 @@
 # sls-image-uploader
-It's simple image uploader by Serverless framework (with AWS).
+It's simple image uploader by Serverless framework.
+with Typescript, Node, AWS Lambda, AWS S3, Koa.
 
 ## Usage
 ### 1. Prefare AWS Account for Serverless Framework.
