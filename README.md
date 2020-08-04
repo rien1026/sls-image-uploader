@@ -18,12 +18,22 @@ npm i
 sls deploy
 ```
 ### 5. Usage
+#### Request
 ```
 METHOD : POST 
 URL : https://[your-amazon-lambda-endpoint]/dev/images
 Body : 
- - imageData
- - imageName
+ - image
+Content-Type : multipart/form-data
+```
+#### Response
+```
+{
+    "msg" : "suc",
+    "data" : {
+        "link" : "https://[s3-image-url]"
+    }
+}
 ```
 #### Postman Example
-![POSTMAN Example](https://csy-image-uploader-bucket.s3.ap-northeast-2.amazonaws.com/image/image-uploader-usage-example.PNG)
+![POSTMAN Example](https://csy-image-uploader-bucket.s3.ap-northeast-2.amazonaws.com/image/image-uploader-usage-example.png)
