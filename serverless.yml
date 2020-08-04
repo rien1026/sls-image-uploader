@@ -1,5 +1,5 @@
 service:
-  name: image-uploader
+  name: sls-image-uploader2
 
 plugins:
   - serverless-plugin-typescript # tsc and copy node_modules(--production) to .build
@@ -20,15 +20,18 @@ provider:
     - Effect: 'Allow'
       Resource: 'arn:aws:s3:::${self:service}-bucket-${self:provider.stage}/*'
       Action:
-        - s3:PutObject
-        - s3:PutObjectAcl
+        - s3:*
 
   deploymentBucket:
     name: ${self:service}-bucket-${self:provider.stage}
 
+  apiGateway:
+    binaryMediaTypes:
+      - 'multipart/form-data'
+
 functions:
   Image:
-    handler: src/handlers/image_handler.imageHandler
+    handler: src/app.imageHandler
     memorySize: 128
     timeout: 6
     events:

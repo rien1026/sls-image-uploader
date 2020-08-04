@@ -1,32 +1,41 @@
 {
-	"name": "image-uploader",
+	"name": "sls-image-uploader2",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"serve": "node .build/src/app.js",
+		"start": "npm run build && npm run serve",
+		"watch": "tsc-watch --onSuccess \"npm run serve\"",
+		"build": "tsc"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"devDependencies": {
-		"@types/aws-sdk": "^2.7.0",
-		"@types/koa": "^2.11.2",
-		"@types/koa-router": "^7.4.0",
-		"@types/koa__cors": "^3.0.1",
-		"serverless-deployment-bucket": "^1.1.1",
-		"serverless-offline": "^6.0.0",
-		"serverless-plugin-typescript": "^1.1.9",
-		"typescript": "^3.8.3"
-	},
 	"dependencies": {
-		"@hapi/joi": "^17.1.1",
-		"@koa/cors": "^3.0.0",
-		"@types/hapi__joi": "^17.1.0",
-		"aws-sdk": "^2.643.0",
-		"koa": "^2.11.0",
-		"koa-body": "^4.1.1",
+		"@koa/cors": "^3.1.0",
+		"@koa/multer": "^3.0.0",
+		"@types/aws-sdk": "^2.7.0",
+		"@types/dotenv": "^8.2.0",
+		"@types/koa": "^2.11.3",
+		"@types/koa-better-body": "^3.1.2",
+		"@types/koa-router": "^7.4.1",
+		"@types/koa__cors": "^3.0.1",
+		"aws-sdk": "^2.726.0",
+		"dotenv": "^8.2.0",
+		"koa": "^2.13.0",
+		"koa-better-body": "^3.3.9",
+		"koa-body": "^4.2.0",
 		"koa-router": "^8.0.8",
-		"serverless-http": "^2.3.2"
+		"lambda-multipart-parser": "0.0.2",
+		"multer": "^1.4.2",
+		"serverless-http": "^2.5.0"
+	},
+	"devDependencies": {
+		"serverless-deployment-bucket": "^1.1.2",
+		"serverless-offline": "^6.5.0",
+		"serverless-plugin-typescript": "^1.1.9",
+		"tsc-watch": "^4.2.9",
+		"typescript": "^3.9.7"
 	}
 }
