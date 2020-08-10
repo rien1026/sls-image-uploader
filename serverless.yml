@@ -1,5 +1,5 @@
 service:
-  name: sls-image-uploader2
+  name: sls-image-uploader
 
 plugins:
   - serverless-plugin-typescript # tsc and copy node_modules(--production) to .build
@@ -31,11 +31,10 @@ provider:
 
 functions:
   Image:
-    handler: src/app.imageHandler
+    handler: src/ImageHandler.imageHandler
     memorySize: 128
     timeout: 6
     events:
       - http:
           method: post
           path: /images
-          cors: true
