@@ -13,11 +13,15 @@ npm install -g serverless
 ```
 npm i
 ```
-### 4. Deploy
+### 4. Test
 ```
-sls deploy
+npm run local
 ```
-### 5. Usage
+### 5. Deploy
+```
+npm run deploy
+```
+### 6. Usage
 #### Request
 ```
 METHOD : POST 
