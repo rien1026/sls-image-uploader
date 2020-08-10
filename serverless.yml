@@ -38,3 +38,4 @@ functions:
       - http:
           method: post
           path: /images
+          cors: true
