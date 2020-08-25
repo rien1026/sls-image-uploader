@@ -4,7 +4,7 @@ with Typescript, Node, AWS Lambda, AWS S3, Koa.
 
 ## Usage
 ### 1. Prefare AWS Account for Serverless Framework
-https://github.com/rien1026/document/blob/master/ServerlessWithAWS.md
+https://github.com/rien1026/document/blob/master/AWS/ServerlessWithAWS.md
 ### 2. Install Serverless Framework
 ```
 npm install -g serverless
