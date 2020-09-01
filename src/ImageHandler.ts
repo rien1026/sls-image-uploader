@@ -1,8 +1,8 @@
 import { Context } from 'aws-lambda';
 import * as parser from 'lambda-multipart-parser';
 import * as AWS from 'aws-sdk';
-import * as fs from 'fs';
 import { AppError } from './utils';
+import imageminWebp from 'imagemin-webp';
 
 export const imageHandler = async (event: any, context: Context) => {
 	try {
@@ -31,4 +31,8 @@ export const imageHandler = async (event: any, context: Context) => {
 		new AppError('AppErr', err.message, err.stack);
 		return { statusCode: 400, body: JSON.stringify({ msg: err.message }) };
 	}
+};
+
+const resizeImage = async (buf) => {
+	return await imageminWebp({ quality: 50 })(buf);
 };
