@@ -5,6 +5,7 @@ plugins:
   - serverless-plugin-typescript # tsc and copy node_modules(--production) to .build
   - serverless-offline # for test
   - serverless-deployment-bucket # for creating new bucket
+  - serverless-layers
 
 provider:
   name: aws
@@ -32,8 +33,8 @@ provider:
 functions:
   Image:
     handler: src/ImageHandler.imageHandler
-    memorySize: 128
-    timeout: 6
+    memorySize: 192
+    timeout: 20
     events:
       - http:
           method: post
