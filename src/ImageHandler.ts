@@ -15,8 +15,8 @@ export const imageHandler = async (event: any, context: Context) => {
 		}
 
 		let file = files[0];
-		if (file.content.length > 3000000) {
-			return { statusCode: 400, body: JSON.stringify({ msg: 'The file size is too big.' }) };
+		if (file.content.length > 5000000) {
+			return { statusCode: 400, body: JSON.stringify({ msg: 'The file d size is too big.' }) };
 		}
 
 		let fileType = file.contentType;
@@ -61,7 +61,15 @@ export const imageHandler = async (event: any, context: Context) => {
 				.promise();
 		}
 
-		return { statusCode: 200, body: JSON.stringify({ msg: 'OK', data: { link: result.Location } }) };
+		return {
+			headers: {
+				"Access-Control-Allow-Headers" : "Content-Type",
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "OPTIONS,POST"
+			},
+			statusCode: 200,
+			body: JSON.stringify({ msg: 'OK', data: { link: 'http://image.amipure.com/origin/' + ts + file.filename } }),
+		};
 	} catch (err) {
 		new AppError('AppErr', err.message, err.stack);
 		return { statusCode: 400, body: JSON.stringify({ msg: err.message }) };
