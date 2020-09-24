@@ -16,21 +16,30 @@ export const imageHandler = async (event: any, context: Context) => {
 
 		let file = files[0];
 		if (file.content.length > 5000000) {
-			return { statusCode: 400, body: JSON.stringify({ msg: 'The file d size is too big.' }) };
+			return { statusCode: 400, body: JSON.stringify({ msg: 'The file size is too big.' }) };
 		}
 
 		let fileType = file.contentType;
-
-		let file360;
-		let file720;
 		if (fileType.includes('jpg') || fileType.includes('jpeg') || fileType.includes('png')) {
-			file360 = await sharp(file.content).resize({ width: 360 }).toBuffer();
-			file720 = await sharp(file.content).resize({ width: 720 }).toBuffer();
+			return { statusCode: 400, body: JSON.stringify({ msg: 'The file format must be jpg, jpeg, png.' }) };
 		}
 
+		let file360;
+		let file640;
+		let file1280;
+		let metadata = await sharp(file.content).metadata();
+		file360 = await sharp(file.content).resize({ width: 426 }).toBuffer();
+		file640 = file.content;
+		file1280 = file.content;
+		if (metadata.width > 640) {
+			file640 = await sharp(file.content).resize({ width: 640 }).toBuffer();
+		}
+		if (metadata.width > 1280) {
+			file1280 = await sharp(file.content).resize({ width: 1280 }).toBuffer();
+		}
 		let ts = new Date().getSeconds() + new Date().getMilliseconds();
 
-		let result = await s3
+		await s3
 			.upload({
 				Bucket: process.env.BUCKET,
 				Body: file.content,
@@ -40,12 +49,12 @@ export const imageHandler = async (event: any, context: Context) => {
 			})
 			.promise();
 
-		if (file360 && file720) {
+		if (file360 && file640 && file1280) {
 			await s3
 				.upload({
 					Bucket: process.env.BUCKET,
 					Body: file360,
-					Key: 'images/360/' + ts + file.filename,
+					Key: 'images/240/' + ts + file.filename,
 					ACL: 'public-read',
 					ContentType: fileType,
 				})
@@ -53,8 +62,17 @@ export const imageHandler = async (event: any, context: Context) => {
 			await s3
 				.upload({
 					Bucket: process.env.BUCKET,
-					Body: file720,
-					Key: 'images/720/' + ts + file.filename,
+					Body: file640,
+					Key: 'images/640/' + ts + file.filename,
+					ACL: 'public-read',
+					ContentType: fileType,
+				})
+				.promise();
+			await s3
+				.upload({
+					Bucket: process.env.BUCKET,
+					Body: file1280,
+					Key: 'images/1280/' + ts + file.filename,
 					ACL: 'public-read',
 					ContentType: fileType,
 				})
@@ -63,9 +81,9 @@ export const imageHandler = async (event: any, context: Context) => {
 
 		return {
 			headers: {
-				"Access-Control-Allow-Headers" : "Content-Type",
-				"Access-Control-Allow-Origin": "*",
-				"Access-Control-Allow-Methods": "OPTIONS,POST"
+				'Access-Control-Allow-Headers': 'Content-Type',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'OPTIONS,POST',
 			},
 			statusCode: 200,
 			body: JSON.stringify({ msg: 'OK', data: { link: 'http://image.amipure.com/origin/' + ts + file.filename } }),

@@ -33,7 +33,7 @@ provider:
 functions:
   Image:
     handler: src/ImageHandler.imageHandler
-    memorySize: 192
+    memorySize: 256
     timeout: 20
     events:
       - http:
