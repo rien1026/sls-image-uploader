@@ -20,20 +20,23 @@ export const imageHandler = async (event: any, context: Context) => {
 		}
 
 		let fileType = file.contentType;
-		if (fileType.includes('jpg') || fileType.includes('jpeg') || fileType.includes('png')) {
+		if (!fileType.includes('jpg') && !fileType.includes('jpeg') && !fileType.includes('png')) {
 			return { statusCode: 400, body: JSON.stringify({ msg: 'The file format must be jpg, jpeg, png.' }) };
 		}
 
-		let file360;
-		let file640;
+		let file426;
+		let file720;
 		let file1280;
 		let metadata = await sharp(file.content).metadata();
-		file360 = await sharp(file.content).resize({ width: 426 }).toBuffer();
-		file640 = file.content;
+		file426 = await sharp(file.content).resize({ width: 426 }).toBuffer();
+		file720 = file.content;
 		file1280 = file.content;
-		if (metadata.width > 640) {
-			file640 = await sharp(file.content).resize({ width: 640 }).toBuffer();
+	
+
+		if (metadata.width > 720) {
+			file720 = await sharp(file.content).resize({ width: 720 }).toBuffer();
 		}
+
 		if (metadata.width > 1280) {
 			file1280 = await sharp(file.content).resize({ width: 1280 }).toBuffer();
 		}
@@ -49,21 +52,22 @@ export const imageHandler = async (event: any, context: Context) => {
 			})
 			.promise();
 
-		if (file360 && file640 && file1280) {
+		if (file426 && file720 && file1280) {
 			await s3
 				.upload({
 					Bucket: process.env.BUCKET,
-					Body: file360,
-					Key: 'images/240/' + ts + file.filename,
+					Body: file426,
+					Key: 'images/426/' + ts + file.filename,
 					ACL: 'public-read',
 					ContentType: fileType,
 				})
 				.promise();
+
 			await s3
 				.upload({
 					Bucket: process.env.BUCKET,
-					Body: file640,
-					Key: 'images/640/' + ts + file.filename,
+					Body: file720,
+					Key: 'images/720/' + ts + file.filename,
 					ACL: 'public-read',
 					ContentType: fileType,
 				})
