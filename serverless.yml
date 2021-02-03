@@ -1,5 +1,5 @@
 service:
-  name: sls-image-uploader
+  name: amipure-image-uploader
 
 plugins:
   - serverless-plugin-typescript # tsc and copy node_modules(--production) to .build
