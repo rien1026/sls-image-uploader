@@ -25,29 +25,8 @@ export const imageHandler = async (event: any, context: Context) => {
 		}
 
 		let ts = ''+new Date().getSeconds() + new Date().getMilliseconds();
-		if(fileType.includes('mp4')){
-			await s3
-			.upload({
-				Bucket: process.env.BUCKET,
-				Body: file.content,
-				Key: 'images/video/' + ts + file.filename,
-				ACL: 'public-read',
-				ContentType: fileType,
-			})
-			.promise();
 
-			return {
-				headers: {
-					'Access-Control-Allow-Headers': '*',
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Methods': 'OPTIONS,POST',
-				},
-				statusCode: 200,
-				body: JSON.stringify({ msg: 'OK', data: { link: 'http://image.amipure.com/video/' + ts + file.filename } }),
-			};
-		}
-		
-		let file426;
+	 /*let file426;
 		let file720;
 		let file1280;
 		let metadata = await sharp(file.content).metadata();
@@ -61,48 +40,17 @@ export const imageHandler = async (event: any, context: Context) => {
 			file720 = await sharp(file.content).resize({ width: 720 }).toBuffer();
 		} else if (!fileType.includes('gif') && metadata.width > 1280) {
 			file1280 = await sharp(file.content).resize({ width: 1280 }).toBuffer();
-		}
+		} */
 
-		await s3
+		let res = await s3
 			.upload({
 				Bucket: process.env.BUCKET,
 				Body: file.content,
-				Key: 'images/origin/' + ts + file.filename,
+				Key: 'images/origin/' + ts,
 				ACL: 'public-read',
 				ContentType: fileType,
 			})
 			.promise();
-
-		if (file426 && file720 && file1280) {
-			await s3
-				.upload({
-					Bucket: process.env.BUCKET,
-					Body: file426,
-					Key: 'images/426/' + ts + file.filename,
-					ACL: 'public-read',
-					ContentType: fileType,
-				})
-				.promise();
-
-			await s3
-				.upload({
-					Bucket: process.env.BUCKET,
-					Body: file720,
-					Key: 'images/720/' + ts + file.filename,
-					ACL: 'public-read',
-					ContentType: fileType,
-				})
-				.promise();
-			await s3
-				.upload({
-					Bucket: process.env.BUCKET,
-					Body: file1280,
-					Key: 'images/1280/' + ts + file.filename,
-					ACL: 'public-read',
-					ContentType: fileType,
-				})
-				.promise();
-		}
 
 		return {
 			headers: {
@@ -111,7 +59,7 @@ export const imageHandler = async (event: any, context: Context) => {
 				'Access-Control-Allow-Methods': 'OPTIONS,POST',
 			},
 			statusCode: 200,
-			body: JSON.stringify({ msg: 'OK', data: { link: 'http://image.amipure.com/origin/' + ts + file.filename } }),
+			body: JSON.stringify({ msg: 'OK', data: { link: res.Location } }),
 		};
 	} catch (err) {
 		new AppError('AppErr', err.message, err.stack);
