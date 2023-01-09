@@ -22,7 +22,7 @@
 	"devDependencies": {
 		"serverless-deployment-bucket": "^1.4.3",
 		"serverless-layers": "^2.3.3",
-		"serverless-offline": "^6.5.0",
+		"serverless-offline": "^12.0.4",
 		"serverless-plugin-typescript": "^1.1.9",
 		"typescript": "^3.9.7"
 	}
